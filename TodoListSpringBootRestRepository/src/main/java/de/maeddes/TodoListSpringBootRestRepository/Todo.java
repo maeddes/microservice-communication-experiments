@@ -24,5 +24,11 @@ public class Todo {
         priority = 2;
 
     }
+
+	public Todo(String name, int priority) {
+
+        this.name = name;
+        this.priority = priority;
+	}
     
 }
