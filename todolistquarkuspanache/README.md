@@ -1,3 +1,11 @@
+# guides used
+
+https://quarkus.io/guides/rest-data-panache
+https://quarkus.io/guides/hibernate-orm-panache
+https://quarkus.io/guides/hibernate-orm
+
+To use own @Id in the entity it requires the use of PanacheEntityBase as parent.
+
 # todolistquarkuspanache project
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
