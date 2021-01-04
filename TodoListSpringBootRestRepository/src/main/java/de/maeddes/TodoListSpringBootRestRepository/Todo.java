@@ -1,5 +1,7 @@
 package de.maeddes.TodoListSpringBootRestRepository;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -10,12 +12,15 @@ import lombok.Data;
 public class Todo {
 
     @Id
-    private String name;
-    private int priority;
+    @Basic(optional = false)
+    @Column(name = "name",unique=true, nullable = false)
+    public String name;
+    public int priority;
 
     public Todo(){
 
         priority = 2;
+
     }
 
     public Todo(String name){
