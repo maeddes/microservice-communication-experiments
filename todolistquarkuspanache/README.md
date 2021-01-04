@@ -6,6 +6,10 @@ https://quarkus.io/guides/hibernate-orm
 
 To use own @Id in the entity it requires the use of PanacheEntityBase as parent.
 
+Issues:
+- HAL is not returned/shown
+- Exception for multiple Entities with same key is not covered internally, but thrown as 500
+
 # todolistquarkuspanache project
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
