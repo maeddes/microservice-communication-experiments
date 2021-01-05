@@ -1,10 +1,13 @@
 package de.maeddes.ThymeleafUI;
 
+import java.io.Serializable;
 
-public class Todo{
+public class Todo implements Serializable{
 
     public String name;
     public int priority;
+
+    public Todo(){}
 
     public Todo(String name, int priority) {
         this.name = name;

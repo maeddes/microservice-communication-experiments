@@ -1,6 +1,12 @@
 package de.maeddes.ThymeleafUI;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.PostConstruct;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -12,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
@@ -36,57 +43,66 @@ public class ThymeleafUiApplication {
 	}
 
 	@GetMapping
-	public String getItems(Model model) {
+	public String items(Model model) {
 
 		System.out.println(" Invoking: " + endpoint + "/todos/");
+		//ResponseEntity<Todo[]> response = null;
 		ResponseEntity<String> response = null;
+		Todo[] todoItems = null;
 
 		try {
 
-			//response = template.getForEntity(endpoint + "/todos", Todo[].class);
 			response = template.getForEntity(endpoint + "/todos", String.class);
+			//System.out.println(response.getBody());
+			//response = template.getForEntity(endpoint + "/todos", Todo[].class);
 			System.out.println("Response: "+response.getBody());
 
-			// ObjectMapper mapper = new ObjectMapper();
-			// mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			// JsonNode jsNode = mapper.readTree(response.getBody());
-			// String todosNode = jsNode.at("/_embedded/todos").toString();
-			// System.out.println("TodosNode: "+todosNode);
-			// List<Todo> todoItems = mapper.readValue(todosNode, new TypeReference<List<Todo>>() {
-			// });
-
-
-
-			System.out.println(todoItems);
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			mapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true);
+			//JsonNode jsNode = mapper.readTree(response.getBody());
+			//String todosNode = jsNode.at("/_embedded/todos").toString();
+			//System.out.println("TodosNode: "+todosNode);
+		    todoItems = mapper.readValue(response.getBody().toString(), Todo[].class);
 
 
 		} catch (Exception e) {
 
 			e.printStackTrace();
 			System.out.println(" Backend down");
-			String[] responseValue = new String[] { "Fix your backend" };
-			model.addAttribute("items", responseValue);
+			String[] items = new String[] { "Fix your backend" };
+			model.addAttribute("items", items);
 		}
 
-		// if (response != null){
-		// 	Todo[] todos = response.getBody();
-		// 	List<String> todoitems = new ArrayList<String>();
-		// 	for(int i = 0; i < todos.length; i++)
-		// 		todoitems.add(todos[i].getName());
-		// 	model.addAttribute("items", todoitems);
-		// } else{
-		// 	String[] responseValue = new String[] { "Fix it" };
-		// 	model.addAttribute("items", responseValue);
-		// }
-
+		if (todoItems != null){
+			// Todo[] todos = response.getBody();
+			List<String> items = new ArrayList<String>();
+			for(int i = 0; i < todoItems.length; i++)
+			  items.add(todoItems[i].getName());
+			model.addAttribute("items", items);
+			System.out.println("Items: "+items);
+		} else{
+			String[] items = new String[] { "Fix it" };
+			model.addAttribute("items", items);
+		}
+		System.out.println("Returning: "+model);
 		return "items";
 
 	}
 
-	@PostMapping
-	public String addItem(String toDo) {
+	@PostMapping("/")
+	public String addItem(@RequestParam String description) {
 
-		HttpEntity<Todo> request = new HttpEntity<>(new Todo(toDo));
+		System.out.println("New ToDo: "+description);
+		
+		if(description.equals("")){
+
+			System.out.println("Empty String");
+			return "redirect:/";
+
+		} 
+
+		HttpEntity<Todo> request = new HttpEntity<>(new Todo(description));
 
 		try {
 
@@ -94,6 +110,7 @@ public class ThymeleafUiApplication {
 
 		} catch (Exception e) {
 
+			e.printStackTrace();
 			System.out.println(" POST failed ");
 
 		}
@@ -101,8 +118,10 @@ public class ThymeleafUiApplication {
 
 	}
 
-	@PostMapping("{toDo}")
+	@PostMapping("/delete/{toDo}")
 	public String setItemDone(@PathVariable String toDo) {
+
+		System.out.println("Delete ToDo String: "+toDo);
 
 		try {
 
