@@ -5,9 +5,6 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -46,45 +43,49 @@ public class ThymeleafUiApplication {
 	public String items(Model model) {
 
 		System.out.println(" Invoking: " + endpoint + "/todos/");
-		//ResponseEntity<Todo[]> response = null;
-		ResponseEntity<String> response = null;
+		// Version A - direct
+		ResponseEntity<Todo[]> response = null;
+		
+		// Version B - String and JSON Parsing
+		//ResponseEntity<String> response = null;
 		Todo[] todoItems = null;
 
 		try {
 
-			response = template.getForEntity(endpoint + "/todos", String.class);
-			//System.out.println(response.getBody());
-			//response = template.getForEntity(endpoint + "/todos", Todo[].class);
+			// Version A
+			response = template.getForEntity(endpoint + "/todos", Todo[].class);
 			System.out.println("Response: "+response.getBody());
+			todoItems = response.getBody();
+		
+			// Version B
+			// response = template.getForEntity(endpoint + "/todos", String.class);
+			// ObjectMapper mapper = new ObjectMapper();
+			// mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			// mapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true);
+			// todoItems = mapper.readValue(response.getBody().toString(), Todo[].class);
 
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			mapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, true);
+			// Expriments for HAL Browsing
 			//JsonNode jsNode = mapper.readTree(response.getBody());
 			//String todosNode = jsNode.at("/_embedded/todos").toString();
-			//System.out.println("TodosNode: "+todosNode);
-		    todoItems = mapper.readValue(response.getBody().toString(), Todo[].class);
-
-
+			
 		} catch (Exception e) {
 
 			e.printStackTrace();
-			System.out.println(" Backend down");
+			System.out.println("Backend down");
 			String[] items = new String[] { "Fix your backend" };
 			model.addAttribute("items", items);
 		}
 
 		if (todoItems != null){
-			// Todo[] todos = response.getBody();
+			
 			List<String> items = new ArrayList<String>();
 			for(int i = 0; i < todoItems.length; i++)
 			  items.add(todoItems[i].getName());
 			model.addAttribute("items", items);
 			System.out.println("Items: "+items);
-		} else{
-			String[] items = new String[] { "Fix it" };
-			model.addAttribute("items", items);
-		}
+
+		} 
+
 		System.out.println("Returning: "+model);
 		return "items";
 
