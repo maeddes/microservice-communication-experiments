@@ -4,7 +4,7 @@
     <title>ToDos</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/3/w3.css"/>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"/>
 <body>
 
 <div class="w3-row-padding w3-section" style="margin: 0px auto; width: 800px;" >
@@ -64,7 +64,7 @@
         <tr th:each="item : ${items}">
             <td th:text="${item}"/>
             <td>
-                <form method="POST" th:action="@{|/${item}|}">
+                <form method="POST" th:action="@{|/delete/${item}|}">
                     <input class="w3-button w3-black" type="submit" value="Done!"/>
                 </form>
             </td>
