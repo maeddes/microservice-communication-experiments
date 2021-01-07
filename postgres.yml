@@ -2,21 +2,21 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: postgresql
+  name: postgresdb
   labels:
-    app: postgres
+    app: postgresdb
 spec:
   ports:
     - port: 5432
   selector:
-    app: postgres
+    app: postgresdb
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: postgres-claim
   labels:
-    app: postgres
+    app: postgresdb
 spec:
   accessModes:
     - ReadWriteOnce
@@ -27,23 +27,23 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgresql
+  name: postgresdb
   labels:
-    app: postgres
+    app: postgresdb
 spec:
   selector:
     matchLabels:
-      app: postgres
+      app: postgresdb
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: postgres
+        app: postgresdb
     spec:
       containers:
         - image: postgres
-          name: postgresql
+          name: postgresdb
           env:
             - name: POSTGRES_USER
               value: matthias
@@ -53,11 +53,11 @@ spec:
               value: password
           ports:
             - containerPort: 5432
-              name: postgresql
+              name: postgresdb
           volumeMounts:
-            - name: postgresql
+            - name: postgresdb
               mountPath: /var/lib/postgresql/data
       volumes:
-        - name: postgresql
+        - name: postgresdb
           persistentVolumeClaim:
             claimName: postgres-claim
