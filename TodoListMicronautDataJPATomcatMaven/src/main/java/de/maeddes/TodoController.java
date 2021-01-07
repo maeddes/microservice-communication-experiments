@@ -35,12 +35,21 @@ public class TodoController{
 
     @Post
     @Consumes(MediaType.APPLICATION_JSON)
-    public HttpResponse<Todo> save(@Body @Valid Todo todo) {
+    @Produces(MediaType.APPLICATION_JSON)
+    public HttpResponse<Todo> saveTodo(@Body @Valid Todo todo) {
 
         return HttpResponse.created(repository.save(todo));
     }
 
+    @Post("/{name}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public HttpResponse<Todo> saveWithName(String name) {
+
+        return HttpResponse.created(repository.save(new Todo(name)));
+    }
+
     @Delete("/{name}")
+    @Produces(MediaType.APPLICATION_JSON)
     public HttpResponse<Todo> delete(String name) {
 
         this.repository.deleteById(name);
