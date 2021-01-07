@@ -1,0 +1,18 @@
+micronaut:
+  application:
+    name: todoListMicronautDataJPATomcat
+datasources:
+  default:
+    url: jdbc:postgresql://localhost:5432/mydb
+    driverClassName: org.postgresql.Driver
+    username: matthias
+    password: password
+    schema-generate: UPDATE
+    dialect: POSTGRES
+jpa:
+  default:
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
+        show_sql: true
