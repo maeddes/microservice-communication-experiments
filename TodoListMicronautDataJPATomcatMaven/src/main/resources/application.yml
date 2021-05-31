@@ -3,7 +3,7 @@ micronaut:
     name: todoListMicronautDataJPATomcat
 datasources:
   default:
-    url: jdbc:postgresql://localhost:5432/mydb
+    url: jdbc:postgresql://localhost:5432/tododb
     driverClassName: org.postgresql.Driver
     username: matthias
     password: password
