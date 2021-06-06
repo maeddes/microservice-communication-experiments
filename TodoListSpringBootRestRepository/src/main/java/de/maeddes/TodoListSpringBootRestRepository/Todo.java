@@ -35,5 +35,6 @@ public class Todo {
         this.name = name;
         this.priority = priority;
 	}
+
     
 }

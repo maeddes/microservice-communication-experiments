@@ -2,6 +2,7 @@ package de.maeddes.TodoListSpringBootRestRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +26,16 @@ public class TodoRestController {
 		List<Todo> todos = new ArrayList<Todo>();
 		todoRepository.findAll().forEach(todos::add);
 		return todos;
+		
+	}
+
+	@GetMapping(path = "/{name}", produces = "application/json")
+	Todo getTodo(@PathVariable String name){
+
+		Optional<Todo> optional = todoRepository.findById(name);
+		Todo todo = optional.get();
+		return todo;
+
 	}
 
 	@PostMapping(consumes = "application/json", produces = "application/json")
