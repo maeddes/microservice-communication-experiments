@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Hello World</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+
+<div>
+    <h1>Thymeleaf Example</h1>
+    <h2>
+        <span th:text="'Hello, ' + ${message}"></span>
+    </h2>
+</div>
+
+<div>
+    <ol>
+        <li th:each="item : ${list}" th:text="${item}"></li>
+    </ol>
+</div>
+
+<div>
+    <table>
+        <tr>
+            <form method="POST" th:action="@{/}">
+            <td>
+                <label for="name">Greeting Recipient:</label>
+                <input type="text" name="name" th:value="${name}"/>
+            </td>
+            <td>
+                <input type="submit" value="Submit!"/>
+            </td>
+            </form>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>

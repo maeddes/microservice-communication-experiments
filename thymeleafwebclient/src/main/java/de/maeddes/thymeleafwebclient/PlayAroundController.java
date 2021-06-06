@@ -10,7 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import reactor.core.publisher.Mono;
 
-@RestController
+@RestController("play")
 public class PlayAroundController {
 
     @Autowired
@@ -44,7 +44,7 @@ public class PlayAroundController {
 
 	}
 
-    @GetMapping("/hello")
+    @GetMapping("/helloo")
     public String sampleCall(){
 
         return WebClient
